@@ -1,0 +1,13 @@
+tactile:
+  use_bluetooth: False
+  bluetooth_device_address: '98:D3:11:FC:3E:27'
+  serial_port: '/dev/ttyUSB0'
+  serial_baud: 115200
+  sensor_data_topic: 'tactile_sensor_data'
+
+  sensors:
+    - id: 1
+      width: 6
+      height: 6
+      value_size: 10
+      frame: 'none'
