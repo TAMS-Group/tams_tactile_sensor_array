@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
 import numpy as np
 import cv2
 import struct
@@ -30,8 +30,8 @@ class SensorDataVisualizer:
 
         rospy.spin()
 
-    def receive_data(self, msg: TactileSensorArrayData):
-        print(msg)
+    def receive_data(self, msg):
+        # print(msg)
         #get publisher:
         publisher = self.publishers.get(msg.sensor_id)
         if not publisher:  # a new publisher has to be instantiated
@@ -39,12 +39,12 @@ class SensorDataVisualizer:
             self.publishers[msg.sensor_id] = publisher
         data = np.array(msg.data).reshape((msg.sensor_data_width, msg.sensor_data_height)) / 4
         data = data.astype(np.uint8)
-        img = cv2.applyColorMap(data, cv2.COLORMAP_JET)
         img = cv2.resize(
-            img,
+            data,
             (msg.sensor_data_width * self.data_scale, msg.sensor_data_height * self.data_scale),
-            interpolation=cv2.INTER_NEAREST
+            interpolation=cv2.INTER_CUBIC
         )
+        img = cv2.applyColorMap(img, cv2.COLORMAP_JET)
         cv2.imshow(self.base_topic + str(msg.sensor_id), img)
         cv2.waitKey(1)
         return

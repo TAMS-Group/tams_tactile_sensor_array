@@ -8,7 +8,6 @@ import struct
 import rospy
 import math
 from tams_tactile_sensor_array.msg import TactileSensorArrayData
-from typing import Dict, List
 
 class SensorReader:
     def __init__(self):
@@ -67,7 +66,7 @@ class SensorReader:
                 checkbyte = self.bt_sock.recv(1)
             else:
                 checkbyte = self.serial.read(1)
-            print(checkbyte)
+            # print(checkbyte)
 
 
 class Sensor:
@@ -89,11 +88,11 @@ class Sensor:
         msg.sensor_data_height = self.height
         msg.sensor_data_width = self.width
         msg.sensor_id = self.id
-        print(msg)
+        # print(msg)
         return msg
 
     @staticmethod
-    def from_dict(sensor_dict: Dict):
+    def from_dict(sensor_dict):
         return Sensor(
             sensor_dict['id'],
             sensor_dict['width'],
