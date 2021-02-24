@@ -3,7 +3,6 @@ import serial
 import bluetooth
 from bitstring import ConstBitStream
 import numpy as np
-import cv2
 import struct
 import rospy
 import math
@@ -33,7 +32,8 @@ class SensorReader:
 
         while True:
             sensor_id, data = self.receive_one()
-            self.data_publisher.publish(self.sensors[sensor_id].generate_data_msg(data))
+            if data: 
+                self.data_publisher.publish(self.sensors[sensor_id].generate_data_msg(data))
 
     def receive_one(self):
         if self.use_bluetooth:
@@ -44,6 +44,10 @@ class SensorReader:
         return sensor_number, self.receive_sensor(sensor_number)
 
     def receive_sensor(self, sensor_number):
+        if sensor_number not in self.sensors.keys():
+            print("Skipping sensor_number \"" + sensor_number + "\"")
+            self.wait_until_end()
+            return None
         sensor = self.sensors[sensor_number]  # type: Sensor
         if self.use_bluetooth:
             raw_data = self.bt_sock.recv(sensor.request_size)
