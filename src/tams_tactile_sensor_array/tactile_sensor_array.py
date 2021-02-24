@@ -12,7 +12,6 @@ class SensorReader:
     def __init__(self):
         rospy.init_node('TactileSensorArray')
 
-        self.data_publisher = rospy.Publisher(rospy.get_param('/TactileSensor/tactile/sensor_data_topic'), TactileSensorArrayData, queue_size=1)
 
         self.use_bluetooth = rospy.get_param('/TactileSensor/tactile/use_bluetooth', False)
 
@@ -33,7 +32,7 @@ class SensorReader:
         while True:
             sensor_id, data = self.receive_one()
             if data: 
-                self.data_publisher.publish(self.sensors[sensor_id].generate_data_msg(data))
+                self.sensors[sensor_id].publisher.publish(self.sensors[sensor_id].generate_data_msg(data))
 
     def receive_one(self):
         if self.use_bluetooth:
@@ -83,6 +82,7 @@ class Sensor:
         self.frame = frame
         self.request_size = int(math.ceil(5/4 * self.width * self.height) + 1)
         self. active = active
+        self.publisher = rospy.Publisher(rospy.get_param('/TactileSensor/tactile/sensor_data_namespace') + '/' + str(sensor_id), TactileSensorArrayData, queue_size=1)
 
     def generate_data_msg(self, data):
         msg = TactileSensorArrayData()

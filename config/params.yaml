@@ -4,21 +4,21 @@ tactile:
   bluetooth_device_address: '98:D3:51:FD:EA:1E'
   serial_port: '/dev/ttyUSB0'
   serial_baud: 115200
-  sensor_data_topic: 'tactile_sensor_data'
+  sensor_data_namespace: 'tactile_sensor_data'
 
   sensors:
     - id: 1
       width: 6
       height: 6
       value_size: 10
-      frame: 'none'
+      frame: 's_model_finger_middle_link_3'
     - id: 2
       width: 6
       height: 6
       value_size: 10
-      frame: 'none'
+      frame: 's_model_finger_1_link_3'
     - id: 3
       width: 6
       height: 6
       value_size: 10
-      frame: 'none'
+      frame: 's_model_finger_2_link_3'

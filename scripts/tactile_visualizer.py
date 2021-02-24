@@ -1,25 +1,20 @@
 #! /usr/bin/env python
 import numpy as np
-import cv2
-import struct
+
 import rospy
-import math
 from tams_tactile_sensor_array.msg import TactileSensorArrayData
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-from typing import Dict, List
 import cv2
 
 class SensorDataVisualizer:
-    def __init__(self):
-        rospy.init_node('TactileSensorVisualizer')
+    def __init__(self, sensor_id):
 
         self.data_subscriber = rospy.Subscriber(
-            rospy.get_param('/TactileSensor/tactile/sensor_data_topic'),
+            rospy.get_param('/TactileSensor/tactile/sensor_data_namespace') + '/' + str(sensor_id),
             TactileSensorArrayData,
             self.receive_data
         )
-
         self.base_topic = 'tactile_viz_'
         self.data_scale = 60
 
@@ -28,7 +23,6 @@ class SensorDataVisualizer:
 
 
 
-        rospy.spin()
 
     def receive_data(self, msg):
         # print(msg)
@@ -55,4 +49,7 @@ class SensorDataVisualizer:
 
 
 if __name__ == '__main__':
-    SensorDataVisualizer()
+    rospy.init_node('TactileSensorVisualizer')
+    s1 = SensorDataVisualizer(1)
+
+    rospy.spin()
