@@ -4,6 +4,8 @@ from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Point
 from std_msgs.msg import ColorRGBA
 from tams_tactile_sensor_array.msg import TactileSensorArrayData
+import cv2
+import numpy as np
 
 class TactileMarker:
     def __init__(self):
@@ -40,7 +42,7 @@ class TactileMarker:
         self.marker_msg.markers[0].header = msg.header
 
         for i in range(len(msg.data)):
-            self.get_color(self.marker_msg.markers[0].colors[i], msg.data[i])
+            self.get_color(self.marker_msg.markers[0].colors[i], 1024 - msg.data[i])
 
         self.pub.publish(self.marker_msg)
 
@@ -52,7 +54,7 @@ class TactileMarker:
         self.marker_msg.markers[1].header = msg.header
 
         for i in range(len(msg.data)):
-            self.get_color(self.marker_msg.markers[1].colors[i], msg.data[i])
+            self.get_color(self.marker_msg.markers[1].colors[i], 1024 - msg.data[i])
         #self.pub.publish(self.marker_msg)
 
     def callback_middle(self, msg):
@@ -63,27 +65,17 @@ class TactileMarker:
         self.marker_msg.markers[2].header = msg.header
 
         for i in range(len(msg.data)):
-            self.get_color(self.marker_msg.markers[2].colors[i], msg.data[i])
+            self.get_color(self.marker_msg.markers[2].colors[i], 1024 - msg.data[i])
         #self.pub.publish(self.marker_msg)
 
     def get_color(self, color, value):
-        value = float(value)
-        if value < self.thr_1:
-            color.r = 0.0
-            color.g = 1.0 # value / self.thr_1
-            color.b = 1.0 - (value / self.thr_1)
-        elif value < self.thr_2:
-            color.r = (value - self.thr_1) / (self.thr_2 - self.thr_1)
-            color.g = 1.0
-            color.b = 0.0
-        elif value < self.thr_3:
-            color.r = 1.0
-            color.g = 1.0 - ((value - self.thr_2) / (self.thr_3 - self.thr_2))
-            color.b = 0.0
-        else:
-            color.r = 1.0
-            color.g = 0.0
-            color.b = 0.0
+        v = np.array([value/4]) # color map uses values between 0-255
+        v = v.astype(np.uint8)
+        c = cv2.applyColorMap(v, cv2.COLORMAP_JET)
+
+        color.r = c[0][0][2] / 255.0
+        color.g = c[0][0][1] / 255.0
+        color.b = c[0][0][0] / 255.0
 
     def cube_list(self, height, width):
         marker = Marker()
@@ -105,7 +97,7 @@ class TactileMarker:
         for x in range(height):
             for z in range(width):
                 point = Point()
-                point.x = height - x * 0.0038
+                point.x = x * 0.0038
                 point.y = 0
                 # - width/2 - taxcel_width/2 * scale
                 point.z = (z - 2.5) * 0.0038
