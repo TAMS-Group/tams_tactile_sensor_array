@@ -1,0 +1,18 @@
+tactile:
+  use_bluetooth: False  # Whether a Bluetooth connection instead of a serial connection is used
+  # bluetooth_device_address: '98:D3:51:FD:EA:1E'  # Address of the Bluetooth device to connect to.
+  serial_port: '/dev/ttyUSB0' # Serial port
+  serial_baud: 115200  # Baud rate of the serial communication
+  sensor_data_namespace: 'tactile_sensor_data'  # namespace for ROS messages sent by the node
+
+  sensors:  # list of the sensors connected to the main controller
+    - id: 1  # individual ID of the sensor.
+      width: 6  # width of the sensor array
+      height: 6  # height of the sensor array
+      value_size: 10  # number of bits of a data point. 10 by default
+      frame: 's_model_finger_middle_link_3'  # frame in which the array is defined
+    - id: 2
+      width: 6
+      height: 6
+      value_size: 10
+      frame: 's_model_finger_1_link_3'

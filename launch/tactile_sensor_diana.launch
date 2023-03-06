@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="tams_tactile_sensor_array" type="tactile_sensor_array.py" name="TactileSensor" output="screen">
+        <rosparam command="load" file="$(find tams_tactile_sensor_array)/config/params_diana.yaml"/>
+    </node>
+</launch>
