@@ -46,7 +46,7 @@ class SensorReader:
 
     def receive_sensor(self, sensor_number):
         if sensor_number not in self.sensors.keys():
-            print("Skipping unknown sensor with sensor_number \"" + sensor_number + "\"")
+            print("Skipping unknown sensor with sensor_number \"" + str(sensor_number) + "\"")
             self.wait_until_end()
             return None
         sensor = self.sensors[sensor_number]  # type: Sensor
@@ -107,8 +107,7 @@ class Sensor:
 
 
 if __name__ == '__main__':
-    with open('params.yml', 'r') as f:
+    with open('../../config/params_diana.yaml', 'r') as f:
         config = yaml.safe_load(f)
 
     SensorReader(config['tactile'], continuous_run=True, callback_function=print)
-
